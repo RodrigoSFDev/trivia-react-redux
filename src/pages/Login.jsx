@@ -34,10 +34,15 @@ class Login extends React.Component {
     localStorage.setItem('token', token);
     history.push('/game');
   };
+  
+  btnConfig = () => {
+    const { history } = this.props;
+    history.push('/settings');
+  };
 
   render() {
     const { name, email, playDisabled } = this.state;
-    // const { history } = this.props;
+    /*  const { history } = this.props; */
     return (
       <div>
         <label htmlFor="input-name">
@@ -69,12 +74,21 @@ class Login extends React.Component {
         >
           Play
         </button>
+        <button
+          type="button"
+          data-testid="btn-settings"
+          onClick={ this.btnConfig }
+        >
+          Configurações
+
+        </button>
       </div>
     );
   }
 }
 
 Login.propTypes = {
+  /*  dispatch: PropTypes.func.isRequired, */
   history: PropTypes.shape({
     push: PropTypes.func,
   }).isRequired,
