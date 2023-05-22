@@ -34,7 +34,7 @@ class Login extends React.Component {
     localStorage.setItem('token', token);
     history.push('/game');
   };
-  
+
   btnConfig = () => {
     const { history } = this.props;
     history.push('/settings');
