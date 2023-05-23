@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Header from '../components/Header';
+import Countdown from '../components/CountDown';
 
 class Game extends React.Component {
   state = {
@@ -9,6 +10,7 @@ class Game extends React.Component {
     qIndex: 0,
     answers: '',
     ativar: false,
+    // timeLeft: 30,
   };
 
   async componentDidMount() {
@@ -50,6 +52,16 @@ class Game extends React.Component {
     }
   }
 
+  // componentDidUpdate(prevState) {
+  //   const { timeOut: { disabled } } = this.props;
+  //   if (disabled && !prevState.disabled) {
+  //     console.log('foi');
+  //     this.setState({
+  //       disabled: true,
+  //     });
+  //   }
+  // }
+
   clickOn = () => {
     this.setState({
       ativar: true,
@@ -87,9 +99,11 @@ class Game extends React.Component {
 
   render() {
     const { results, qIndex, answers, ativar } = this.state;
+    const { timeOut: { disabled } } = this.props;
     return (
       <div>
         <Header />
+        <Countdown />
         { results.length ? (
           <div>
             <h2 data-testid="question-category">{ results[qIndex].category }</h2>
@@ -103,6 +117,7 @@ class Game extends React.Component {
                       onClick={ this.clickOn }
                       className={ ativar ? 'correto' : '' }
                       key={ i }
+                      disabled={ disabled }
                     >
                       {a.correct}
                     </button>
@@ -114,6 +129,7 @@ class Game extends React.Component {
                     onClick={ this.clickOn }
                     className={ ativar ? 'errado' : '' }
                     data-testid={ `wrong-answer-${i}` }
+                    disabled={ disabled }
                   >
                     {a}
                   </button>
@@ -140,6 +156,7 @@ Game.propTypes = {
   history: PropTypes.shape({
     push: PropTypes.func,
   }).isRequired,
+  timeOut: PropTypes.bool.isRequired,
 };
 
 const mapStateToProps = (state) => ({
