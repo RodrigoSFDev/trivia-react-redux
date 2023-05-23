@@ -97,8 +97,7 @@ Login.propTypes = {
 };
 
 const mapStateToProps = (state) => ({
-  savedName: state.player.name,
-  savedEmail: state.player.gravatarEmail,
+  ...state,
 });
 
 export default connect(mapStateToProps)(Login);
