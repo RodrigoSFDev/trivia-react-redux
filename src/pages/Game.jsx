@@ -52,18 +52,25 @@ class Game extends React.Component {
           <div>
             <h2 data-testid="question-category">{ results[qIndex].category }</h2>
             <h3 data-testid="question-text">{ results[qIndex].question }</h3>
-            <div data-testid="answer-options">
-              <button
-                data-testid="correct-answer"
-              >
-                { results[qIndex].correct_answer }
-              </button>
-              { results[qIndex].incorrect_answers.map((a, i) => (
-                <button key={ i } data-testid={ `wrong-answer-${i}` }>
-                  { a }
+            <ul
+              data-testid="answer-options"
+              style={ { listStyleType: 'none', display: 'flex' } }
+            >
+              <li>
+                <button
+                  data-testid="correct-answer"
+                >
+                  { results[qIndex].correct_answer }
                 </button>
+              </li>
+              { results[qIndex].incorrect_answers.map((a, i) => (
+                <li key={ i }>
+                  <button data-testid={ `wrong-answer-${i}` }>
+                    { a }
+                  </button>
+                </li>
               )) }
-            </div>
+            </ul>
           </div>
         ) : null }
       </div>
