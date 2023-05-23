@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { login } from '../Redux/Actions';
+import img from '../trivia.png';
 
 class Login extends React.Component {
   state = {
@@ -44,46 +45,49 @@ class Login extends React.Component {
 
   render() {
     const { name, email, playDisabled } = this.state;
-    /*  const { history } = this.props; */
+    /* const { history } = this.props; */
     return (
-      <div>
-        <label htmlFor="input-name">
-          Nome:
-          <input
-            id="input-name"
-            name="name"
-            type="text"
-            data-testid="input-player-name"
-            value={ name }
-            onChange={ this.handleChange }
-          />
-        </label>
-        <label htmlFor="input-name">
-          Email:
-          <input
-            id="input-email"
-            name="email"
-            type="email"
-            data-testid="input-gravatar-email"
-            value={ email }
-            onChange={ this.handleChange }
-          />
-        </label>
-        <button
-          data-testid="btn-play"
-          disabled={ playDisabled }
-          onClick={ this.fetchToken }
-        >
-          Play
-        </button>
-        <button
-          type="button"
-          data-testid="btn-settings"
-          onClick={ this.btnConfig }
-        >
-          Configurações
+      <div className="paginaLogin">
+        <img className="logo" src={ img } alt="trivia" />
+        <div className="login">
+          <label htmlFor="input-name">
+            Nome:
+            <input
+              id="input-name"
+              name="name"
+              type="text"
+              data-testid="input-player-name"
+              value={ name }
+              onChange={ this.handleChange }
+            />
+          </label>
+          <label htmlFor="input-name">
+            Email:
+            <input
+              id="input-email"
+              name="email"
+              type="email"
+              data-testid="input-gravatar-email"
+              value={ email }
+              onChange={ this.handleChange }
+            />
+          </label>
+          <button
+            data-testid="btn-play"
+            disabled={ playDisabled }
+            onClick={ this.fetchToken }
+          >
+            Play
+          </button>
+          <button
+            type="button"
+            data-testid="btn-settings"
+            onClick={ this.btnConfig }
+          >
+            Configurações
 
-        </button>
+          </button>
+        </div>
       </div>
     );
   }
@@ -97,7 +101,8 @@ Login.propTypes = {
 };
 
 const mapStateToProps = (state) => ({
-  ...state,
+  savedName: state.player.name,
+  savedEmail: state.player.gravatarEmail,
 });
 
 export default connect(mapStateToProps)(Login);
