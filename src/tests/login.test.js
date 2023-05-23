@@ -3,19 +3,37 @@ import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import renderWithRouterAndRedux from './helpers/renderWithRouterAndRedux';
 import { act } from 'react-dom/test-utils';
-/* import Login from '../pages/Login'; */
 import App from '../App'
+import Login from '../pages/Login';
+
+beforeEach(() => {
+  jest.spyOn(global, 'fetch')
+  global.fetch.mockResolvedValue({
+    json: jest.fn().mockResolvedValue(MockresponseAPILogin),
+  });
+});
+
+afterEach(() => {
+  jest.restoreAllMocks();
+});
+
+const MockresponseAPILogin = {
+  responseCode: 0,
+  responseMessage: "Token Generated Successfully!",
+  token: "4fa18dd61da830d8930de13a391c3df6e5ee593b3182c17e3a48087ee913d697"
+}
+const mockValue = 'token'
 
 test('Verifica se a tela de login é renderizada corretamente', () => {
-    renderWithRouterAndRedux(<App />);
-    screen.getByRole('textbox', { name: /nome: email:/i });
-    screen.getByText(/email:/i);
+    renderWithRouterAndRedux(<Login />);
+    screen.getByTestId('input-player-name');
+    screen.getByTestId('input-gravatar-email');
     screen.getByRole('button', { name: /configurações/i });
     screen.getByRole('button', { name: /play/i });
 });
 
 test('Verifica se o botão de play é habilitado após inserir email e senha certos', () => {
-  renderWithRouterAndRedux(<App />);
+  renderWithRouterAndRedux(<Login />);
   const nameRigth = 'teste teste'
   const emailRigtht = 'teste@teste.com';
   const btnPlay = screen.getByTestId('btn-play');
@@ -29,7 +47,7 @@ test('Verifica se o botão de play é habilitado após inserir email e senha cer
 });
 
 test('Verifica se o botão de play continua desabilitado após inserir email e senha errados', () => {
-  renderWithRouterAndRedux(<App />);
+  renderWithRouterAndRedux(<Login />);
   const emailWrong = 'teste';
   const nameWrong = ''
   const btnPlay = screen.getByRole('button', { name: /play/i });
@@ -38,7 +56,7 @@ test('Verifica se o botão de play continua desabilitado após inserir email e s
   userEvent.type(screen.getByText(/nome/i), nameWrong);
 
   expect(btnPlay).toBeDisabled();
-})
+});
 
 test('Verifica se ao clicar no botão de settings, o usuario é redirecionado para a rota /settings', () => {
   const { history } = renderWithRouterAndRedux(<App />);
@@ -50,4 +68,42 @@ test('Verifica se ao clicar no botão de settings, o usuario é redirecionado pa
   expect(pathname).toBe('/settings');
 
   screen.getByText(/settings/i);
-})
+});
+
+test('Verifica se ao clicar no botão de play, o usuário é redirecionado para a rota /game', async () => {
+  const { history } = renderWithRouterAndRedux(<App />);
+  const btnPlay = screen.getByRole('button', { name: /play/i });
+  const name = 'teste teste'
+  const email = 'teste@teste.com';
+  
+  act(() => userEvent.type(screen.getByTestId('input-player-name'), name));
+  act(() => userEvent.type(screen.getByTestId('input-gravatar-email'), email));
+  
+  expect(btnPlay).toBeEnabled();
+
+  act(() => userEvent.click(btnPlay));
+
+
+  await waitFor(() => {
+  const { pathname } = history.location;
+  expect(global.fetch).toHaveBeenCalled();
+  expect(pathname).toBe('/game');
+  screen.getByText(name);
+  })
+});
+
+test('Verifica se ao clicar em play o hash é gerado', () => {
+  // fazer o caminho do usuario e a partir disso validar se o fetch foi chamado, após testar o localStorage
+  renderWithRouterAndRedux(<App />);
+  const name = 'Teste'
+  const email = 'teste@teste.com';
+  const btnPlay = screen.getByTestId('btn-play');
+
+  userEvent.type(screen.getByTestId('input-player-name'), name);
+  userEvent.type(screen.getByText(/email/i), email);
+
+  userEvent.click(btnPlay);
+
+  window.localStorage.setItem(mockValue, JSON.stringify(MockresponseAPILogin.token));
+  expect(localStorage.getItem(mockValue)).toEqual(JSON.stringify(MockresponseAPILogin.token));
+});
