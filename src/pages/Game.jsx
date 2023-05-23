@@ -20,8 +20,22 @@ class Game extends React.Component {
         localStorage.removeItem('token');
         history.push('/');
       }
+      const entities = {
+        '&#039;': '\'',
+        '&quot;': '"',
+        '&ntilde;': 'ñ',
+        '&eacute;': 'é',
+        '&amp;': '&',
+        '&uuml;': 'ü',
+      };
+      const replaced = data.results.map((element) => {
+        const question = element.question.replace(/&#?\w+;/g, (match) => entities[match] || match);
+        const correct = element.correct_answer.replace(/&#?\w+;/g, (match) => entities[match] || match);
+        const incorrect = element.incorrect_answers.map((elementTwo) => elementTwo.replace(/&#?\w+;/g, (match) => entities[match] || match));
+        return { ...element, question, correct, incorrect };
+      });
       this.setState({
-        results: data.results,
+        results: replaced,
       });
       console.log(data.results);
     } catch (err) {
