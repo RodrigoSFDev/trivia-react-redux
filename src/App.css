@@ -12,8 +12,8 @@ body {
 .paginaLogin {
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
   height: 100%;
   width: 100%;
 }
@@ -22,16 +22,16 @@ body {
   background-color: blueviolet;
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
   align-items: center;
+  justify-content: space-around;
   height: 300px;
   width: 250px;
 }
 
 .logo {
   height: 100px;
-  width: 200px;
   margin: 10px;
+  width: 200px;
 }
 
 .correto {
