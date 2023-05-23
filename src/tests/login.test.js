@@ -1,5 +1,5 @@
 import React from 'react';
-import { screen } from '@testing-library/react';
+import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import renderWithRouterAndRedux from './helpers/renderWithRouterAndRedux';
 import { act } from 'react-dom/test-utils';
@@ -14,16 +14,18 @@ test('Verifica se a tela de login é renderizada corretamente', () => {
     screen.getByRole('button', { name: /play/i });
 });
 
-test('Verifica se o botão de play continua é habilitado após inserir email e senha certos', () => {
+test('Verifica se o botão de play é habilitado após inserir email e senha certos', () => {
   renderWithRouterAndRedux(<App />);
+  const nameRigth = 'teste teste'
   const emailRigtht = 'teste@teste.com';
-  const nameRigth = 'teste'
-  const btnPlay = screen.getByRole('button', { name: /play/i });
+  const btnPlay = screen.getByTestId('btn-play');
 
-  userEvent.type(screen.getByText(/email/i), emailRigtht);
-  userEvent.type(screen.getByText(/nome/i), nameRigth);
+  act(() => userEvent.type(screen.getByTestId('input-player-name'), nameRigth));
+  act(() => userEvent.type(screen.getByText(/email/i), emailRigtht));
 
-  expect(btnPlay).not.toBeDisabled();
+  waitFor(() => {
+    expect(btnPlay).not.toBeDisabled();
+  })
 });
 
 test('Verifica se o botão de play continua desabilitado após inserir email e senha errados', () => {
@@ -36,4 +38,16 @@ test('Verifica se o botão de play continua desabilitado após inserir email e s
   userEvent.type(screen.getByText(/nome/i), nameWrong);
 
   expect(btnPlay).toBeDisabled();
+})
+
+test('Verifica se ao clicar no botão de settings, o usuario é redirecionado para a rota /settings', () => {
+  const { history } = renderWithRouterAndRedux(<App />);
+  const config = screen.getByRole('button', { name: /configurações/i });
+
+  act(() => userEvent.click(config));
+
+  const { pathname } = history.location;
+  expect(pathname).toBe('/settings');
+
+  screen.getByText(/settings/i);
 })
