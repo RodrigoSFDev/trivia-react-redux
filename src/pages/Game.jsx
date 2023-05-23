@@ -8,6 +8,7 @@ class Game extends React.Component {
     results: '',
     qIndex: 0,
     answers: '',
+    ativar: false,
   };
 
   async componentDidMount() {
@@ -49,6 +50,12 @@ class Game extends React.Component {
     }
   }
 
+  clickOn = () => {
+    this.setState({
+      ativar: true,
+    });
+  };
+
   shuffleArray = (array) => { // código do stackoverflow (Knuth Shuffle)
     let currentIndex = array.length;
     let randomIndex;
@@ -62,7 +69,7 @@ class Game extends React.Component {
   };
 
   render() {
-    const { results, qIndex, answers } = this.state;
+    const { results, qIndex, answers, ativar } = this.state;
     return (
       <div>
         <Header />
@@ -74,13 +81,23 @@ class Game extends React.Component {
               { answers.map((a, i) => {
                 if (typeof (a) === 'object') {
                   return (
-                    <button data-testid="correct-answer" key={ i }>
+                    <button
+                      data-testid="correct-answer"
+                      onClick={ this.clickOn }
+                      className={ ativar ? 'correto' : '' }
+                      key={ i }
+                    >
                       {a.correct}
                     </button>
                   );
                 }
                 return (
-                  <button key={ i } data-testid={ `wrong-answer-${i}` }>
+                  <button
+                    key={ i }
+                    onClick={ this.clickOn }
+                    className={ ativar ? 'errado' : '' }
+                    data-testid={ `wrong-answer-${i}` }
+                  >
                     {a}
                   </button>
                 );
