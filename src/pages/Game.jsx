@@ -7,10 +7,12 @@ class Game extends React.Component {
   state = {
     results: '',
     qIndex: 0,
+    answers: '',
   };
 
   async componentDidMount() {
     const token = localStorage.getItem('token');
+    const { qIndex } = this.state;
     try {
       const response = await fetch(`https://opentdb.com/api.php?amount=5&token=${token}`);
       const data = await response.json();
@@ -34,8 +36,12 @@ class Game extends React.Component {
         const incorrect = element.incorrect_answers.map((elementTwo) => elementTwo.replace(/&#?\w+;/g, (match) => entities[match] || match));
         return { ...element, question, correct, incorrect };
       });
+      const answersArray = [{ correct: replaced[qIndex].correct_answer },
+        ...replaced[qIndex].incorrect_answers];
+      const randomizedAnswers = this.shuffleArray(answersArray);
       this.setState({
         results: replaced,
+        answers: randomizedAnswers,
       });
       console.log(data.results);
     } catch (err) {
@@ -43,8 +49,20 @@ class Game extends React.Component {
     }
   }
 
+  shuffleArray = (array) => { // código do stackoverflow (Knuth Shuffle)
+    let currentIndex = array.length;
+    let randomIndex;
+    while (currentIndex !== 0) {
+      randomIndex = Math.floor(Math.random() * currentIndex);
+      currentIndex -= 1;
+      [array[currentIndex], array[randomIndex]] = [
+        array[randomIndex], array[currentIndex]];
+    }
+    return array;
+  };
+
   render() {
-    const { results, qIndex } = this.state;
+    const { results, qIndex, answers } = this.state;
     return (
       <div>
         <Header />
@@ -52,25 +70,32 @@ class Game extends React.Component {
           <div>
             <h2 data-testid="question-category">{ results[qIndex].category }</h2>
             <h3 data-testid="question-text">{ results[qIndex].question }</h3>
-            <ul
-              data-testid="answer-options"
-              style={ { listStyleType: 'none', display: 'flex' } }
-            >
-              <li>
-                <button
-                  data-testid="correct-answer"
-                >
-                  { results[qIndex].correct_answer }
-                </button>
-              </li>
-              { results[qIndex].incorrect_answers.map((a, i) => (
-                <li key={ i }>
-                  <button data-testid={ `wrong-answer-${i}` }>
-                    { a }
+            <div data-testid="answer-options">
+              { answers.map((a, i) => {
+                if (typeof (a) === 'object') {
+                  return (
+                    <button data-testid="correct-answer" key={ i }>
+                      {a.correct}
+                    </button>
+                  );
+                }
+                return (
+                  <button key={ i } data-testid={ `wrong-answer-${i}` }>
+                    {a}
                   </button>
-                </li>
-              )) }
-            </ul>
+                );
+              }) }
+              {/* <button
+                data-testid="correct-answer"
+              >
+                { results[qIndex].correct_answer }
+              </button>
+              { results[qIndex].incorrect_answers.map((a, i) => (
+                <button key={ i } data-testid={ `wrong-answer-${i}` }>
+                  { a }
+                </button>
+              )) } */}
+            </div>
           </div>
         ) : null }
       </div>
