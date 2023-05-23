@@ -68,6 +68,23 @@ class Game extends React.Component {
     return array;
   };
 
+  updateAnswers = () => {
+    const { qIndex, results } = this.state;
+    const answersArray = [{ correct: results[qIndex].correct_answer },
+      ...results[qIndex].incorrect_answers];
+    const randomizedAnswers = this.shuffleArray(answersArray);
+    this.setState({
+      answers: randomizedAnswers,
+    });
+  };
+
+  nextBtnClick = () => {
+    this.setState((prevState) => ({
+      ativar: !prevState.ativar,
+      qIndex: prevState.qIndex + 1,
+    }), this.updateAnswers);
+  };
+
   render() {
     const { results, qIndex, answers, ativar } = this.state;
     return (
@@ -102,17 +119,15 @@ class Game extends React.Component {
                   </button>
                 );
               }) }
-              {/* <button
-                data-testid="correct-answer"
-              >
-                { results[qIndex].correct_answer }
-              </button>
-              { results[qIndex].incorrect_answers.map((a, i) => (
-                <button key={ i } data-testid={ `wrong-answer-${i}` }>
-                  { a }
-                </button>
-              )) } */}
             </div>
+            { ativar ? (
+              <button
+                data-testid="btn-next"
+                onClick={ this.nextBtnClick }
+              >
+                Next
+              </button>
+            ) : null }
           </div>
         ) : null }
       </div>
