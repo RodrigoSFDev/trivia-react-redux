@@ -15,7 +15,7 @@ class Feedback extends Component {
         <button
           type="button"
           data-testid="btn-play-again"
-          onChange={ () => history.push('/') }
+          onClick={ () => history.push('/') }
         >
           Play again
         </button>
