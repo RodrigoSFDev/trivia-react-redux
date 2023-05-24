@@ -104,8 +104,18 @@ class Game extends React.Component {
         { results.length ? <Countdown /> : <h3>Loading...</h3> }
         { results.length ? (
           <div>
-            <h2 data-testid="question-category">{ results[qIndex].category }</h2>
-            <h3 data-testid="question-text">{ results[qIndex].question }</h3>
+            <h2
+              data-testid="question-category"
+              className="game-category"
+            >
+              { results[qIndex].category }
+            </h2>
+            <h3
+              data-testid="question-text"
+              className="game-question"
+            >
+              { results[qIndex].question }
+            </h3>
             <div data-testid="answer-options" className="answers-container">
               { answers.map((a, i) => {
                 if (typeof (a) === 'object') {

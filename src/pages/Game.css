@@ -10,14 +10,29 @@
   position: absolute;
   top: 50%;
   transform: translate(-50%, -50%);
-  width: 600px;
+  width: 500px;
+}
+
+.header-timer {
+  display: flex;
+  margin-bottom: 20px;
+}
+
+.timer h1 {
+  color: white;
+}
+
+.game-category, .game-question {
+  margin-bottom: 10px;
+  text-align: center;
 }
 
 .answers-container {
   align-items: center;
   display: flex;
   flex-direction: column;
-  height: 100px;
+  height: 300px;
+  margin-bottom: 0;
 }
 
 button {
@@ -26,10 +41,10 @@ button {
   background-color: #fcfcfd;
   border-radius: 4px;
   border-width: 0;
-  box-shadow: rgba(45, 35, 66, 0.4) 0 2px 4px , rgba(45, 35, 66, 0.3) 0 7px 13px -3px
+  box-shadow: rgba(45, 35, 66, 0.8) 0 2px 4px , rgba(45, 35, 66, 0.6) 0 7px 13px -3px
     #d6d6e7 0 -3px 0 inset;
   box-sizing: border-box;
-  color: #36395a;
+  color: #1f2133;
   cursor: pointer;
   display: inline-flex;
   font-family: monospace;
@@ -38,6 +53,7 @@ button {
   justify-content: center;
   line-height: 1;
   list-style: none;
+  margin-top: 13px;
   overflow: hidden;
   padding-left: 16px;
   padding-right: 16px;
@@ -46,7 +62,7 @@ button {
   touch-action: manipulation;
   transition: box-shadow 0.15s , transform 0.15s;
   user-select: none;
-  white-space: nowrap;
+  white-space: wrap;
   width: 60%;
   will-change: box-shadow , transform;
 }
@@ -67,5 +83,6 @@ button:active {
 }
 
 .next {
-  width: 30%;
+  height: 40px;
+  width: 20%;
 }
