@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Header from '../components/Header';
-import Countdown from '../components/CountDown';
 import './Game.css';
 
 class Game extends React.Component {
@@ -11,12 +10,15 @@ class Game extends React.Component {
     qIndex: 0,
     answers: '',
     ativar: false,
-    // timeLeft: 30,
+    timeLeft: 30,
+    disabled: false,
   };
 
   async componentDidMount() {
     const token = localStorage.getItem('token');
     const { qIndex } = this.state;
+    this.startCounter();
+
     try {
       const response = await fetch(`https://opentdb.com/api.php?amount=5&token=${token}`);
       const data = await response.json();
@@ -53,16 +55,36 @@ class Game extends React.Component {
     }
   }
 
-  // componentDidUpdate(prevState) {
-  //   const { timeOut: { disabled } } = this.props;
-  //   if (disabled && !prevState.disabled) {
-  //     this.clickOn();
-  //   }
-  // }
+  componentDidUpdate() {
+    const { timeLeft, disabled } = this.state;
+
+    if (timeLeft === 0 && !disabled) {
+      clearInterval(this.countdown);
+      console.log('parou');
+      this.setState({
+        disabled: true,
+      });
+    }
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.countdown);
+  }
+
+  startCounter = () => {
+    const oneSecond = 1000;
+    this.countdown = setInterval(() => {
+      this.setState((prevState) => ({
+        timeLeft: prevState.timeLeft - 1,
+      }));
+    }, oneSecond);
+  };
 
   clickOn = () => {
+    clearInterval(this.countdown);
     this.setState({
       ativar: true,
+      disabled: false,
     });
   };
 
@@ -89,19 +111,26 @@ class Game extends React.Component {
   };
 
   nextBtnClick = () => {
+    const { qIndex } = this.state;
+    const { history } = this.props;
+    const maxIndex = 4;
+    if (qIndex === maxIndex) {
+      history.push('/feedback');
+    }
+    this.startCounter();
     this.setState((prevState) => ({
       ativar: !prevState.ativar,
       qIndex: prevState.qIndex + 1,
+      timeLeft: 30,
     }), this.updateAnswers);
   };
 
   render() {
-    const { results, qIndex, answers, ativar } = this.state;
-    const { timeOut: { disabled } } = this.props;
+    const { results, qIndex, answers, ativar, timeLeft, disabled } = this.state;
     return (
       <div className="game-container">
         <Header />
-        { results.length ? <Countdown /> : <h3>Loading...</h3> }
+        { results.length ? <h1>{ timeLeft }</h1> : <h3>Loading...</h3> }
         { results.length ? (
           <div>
             <h2
@@ -161,7 +190,6 @@ class Game extends React.Component {
 }
 
 Game.propTypes = {
-  // dispatch: PropTypes.func.isRequired,
   history: PropTypes.shape({
     push: PropTypes.func,
   }).isRequired,

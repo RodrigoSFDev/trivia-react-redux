@@ -84,7 +84,7 @@ class Login extends React.Component {
             onClick={ this.btnConfig }
             className="white"
           >
-            Configurações
+            Settings
 
           </button>
         </div>

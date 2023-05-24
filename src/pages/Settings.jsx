@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import './GenericPage.css';
 
 class Settings extends Component {
   render() {
