@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Header from '../components/Header';
 
-export class Feedback extends Component {
+class Feedback extends Component {
   render() {
     const { history, assertions } = this.props;
     const minimumScore = 3;
