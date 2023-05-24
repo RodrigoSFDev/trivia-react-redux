@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Header from '../components/Header';
 import Countdown from '../components/CountDown';
+import './Game.css';
 
 class Game extends React.Component {
   state = {
@@ -55,10 +56,7 @@ class Game extends React.Component {
   // componentDidUpdate(prevState) {
   //   const { timeOut: { disabled } } = this.props;
   //   if (disabled && !prevState.disabled) {
-  //     console.log('foi');
-  //     this.setState({
-  //       disabled: true,
-  //     });
+  //     this.clickOn();
   //   }
   // }
 
@@ -101,14 +99,24 @@ class Game extends React.Component {
     const { results, qIndex, answers, ativar } = this.state;
     const { timeOut: { disabled } } = this.props;
     return (
-      <div>
+      <div className="game-container">
         <Header />
-        <Countdown />
+        { results.length ? <Countdown /> : <h3>Loading...</h3> }
         { results.length ? (
           <div>
-            <h2 data-testid="question-category">{ results[qIndex].category }</h2>
-            <h3 data-testid="question-text">{ results[qIndex].question }</h3>
-            <div data-testid="answer-options">
+            <h2
+              data-testid="question-category"
+              className="game-category"
+            >
+              { results[qIndex].category }
+            </h2>
+            <h3
+              data-testid="question-text"
+              className="game-question"
+            >
+              { results[qIndex].question }
+            </h3>
+            <div data-testid="answer-options" className="answers-container">
               { answers.map((a, i) => {
                 if (typeof (a) === 'object') {
                   return (
@@ -140,6 +148,7 @@ class Game extends React.Component {
               <button
                 data-testid="btn-next"
                 onClick={ this.nextBtnClick }
+                className="next"
               >
                 Next
               </button>
@@ -156,7 +165,9 @@ Game.propTypes = {
   history: PropTypes.shape({
     push: PropTypes.func,
   }).isRequired,
-  timeOut: PropTypes.bool.isRequired,
+  timeOut: PropTypes.shape({
+    disabled: PropTypes.bool,
+  }).isRequired,
 };
 
 const mapStateToProps = (state) => ({

@@ -33,8 +33,8 @@ class Countdown extends React.Component {
   render() {
     const { timeLeft } = this.state;
     return (
-      <div>
-        <h1>{ timeLeft }</h1>
+      <div className="timer">
+        <h1>{ `${timeLeft}s` }</h1>
       </div>
     );
   }
