@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Header from '../components/Header';
+import { getScore } from '../Redux/Actions';
 import './Game.css';
 
 class Game extends React.Component {
@@ -125,6 +126,29 @@ class Game extends React.Component {
     }), this.updateAnswers);
   };
 
+  getPoints = () => {
+    const { qIndex, results, timeLeft } = this.state;
+    const { dispatch } = this.props;
+    const standartPoints = 10;
+    const multiplierTwo = 2;
+    const multiplierThree = 3;
+
+    switch (results[qIndex].difficulty) {
+    case 'easy':
+      dispatch(getScore(timeLeft + standartPoints));
+      break;
+    case 'medium':
+      dispatch(getScore(standartPoints + (timeLeft * multiplierTwo)));
+      break;
+    case 'hard':
+      dispatch(getScore(standartPoints + (timeLeft * multiplierThree)));
+      break;
+    default:
+      return true;
+    }
+    this.clickOn();
+  };
+
   render() {
     const { results, qIndex, answers, ativar, timeLeft, disabled } = this.state;
     return (
@@ -151,7 +175,7 @@ class Game extends React.Component {
                   return (
                     <button
                       data-testid="correct-answer"
-                      onClick={ this.clickOn }
+                      onClick={ this.getPoints }
                       className={ ativar ? 'correto' : '' }
                       key={ i }
                       disabled={ disabled }
@@ -190,6 +214,7 @@ class Game extends React.Component {
 }
 
 Game.propTypes = {
+  dispatch: PropTypes.func.isRequired,
   history: PropTypes.shape({
     push: PropTypes.func,
   }).isRequired,
