@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import md5 from 'crypto-js/md5';
 import { connect } from 'react-redux';
+import './Header.css';
 
 class Header extends Component {
   state = {
@@ -28,8 +29,8 @@ class Header extends Component {
           alt="Profile"
           src={ endPoint }
         />
-        <p data-testid="header-player-name">{`${name}`}</p>
-        <p data-testid="header-score">{`${score}`}</p>
+        <span data-testid="header-player-name">{` ${name}`}</span>
+        <span data-testid="header-score">{` ${score}`}</span>
       </div>
     );
   }

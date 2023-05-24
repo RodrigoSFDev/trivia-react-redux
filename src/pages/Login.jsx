@@ -59,7 +59,7 @@ class Login extends React.Component {
             data-testid="input-player-name"
             value={ name }
             onChange={ this.handleChange }
-            placeholder="Name"
+            placeholder="Insert your name"
           />
           <input
             id="input-email"
@@ -68,7 +68,7 @@ class Login extends React.Component {
             data-testid="input-gravatar-email"
             value={ email }
             onChange={ this.handleChange }
-            placeholder="Email"
+            placeholder="Insert your email"
           />
           <button
             data-testid="btn-play"
@@ -82,6 +82,7 @@ class Login extends React.Component {
             type="button"
             data-testid="btn-settings"
             onClick={ this.btnConfig }
+            className="white"
           >
             Configurações
 
