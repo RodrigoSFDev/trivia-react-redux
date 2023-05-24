@@ -28,7 +28,7 @@ test('Verifica se a tela de login é renderizada corretamente', () => {
     renderWithRouterAndRedux(<Login />);
     screen.getByTestId('input-player-name');
     screen.getByTestId('input-gravatar-email');
-    screen.getByRole('button', { name: /configurações/i });
+    screen.getByRole('button', { name: /settings/i });
     screen.getByRole('button', { name: /play/i });
 });
 
@@ -60,7 +60,7 @@ test('Verifica se o botão de play continua desabilitado após inserir email e s
 
 test('Verifica se ao clicar no botão de settings, o usuario é redirecionado para a rota /settings', () => {
   const { history } = renderWithRouterAndRedux(<App />);
-  const config = screen.getByRole('button', { name: /configurações/i });
+  const config = screen.getByRole('button', { name: /settings/i });
 
   act(() => userEvent.click(config));
 
