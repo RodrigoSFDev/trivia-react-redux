@@ -55,10 +55,7 @@ class Game extends React.Component {
   // componentDidUpdate(prevState) {
   //   const { timeOut: { disabled } } = this.props;
   //   if (disabled && !prevState.disabled) {
-  //     console.log('foi');
-  //     this.setState({
-  //       disabled: true,
-  //     });
+  //     this.clickOn();
   //   }
   // }
 
@@ -103,7 +100,7 @@ class Game extends React.Component {
     return (
       <div>
         <Header />
-        <Countdown />
+        { results.length ? <Countdown /> : <h3>Loading...</h3> }
         { results.length ? (
           <div>
             <h2 data-testid="question-category">{ results[qIndex].category }</h2>
@@ -156,7 +153,9 @@ Game.propTypes = {
   history: PropTypes.shape({
     push: PropTypes.func,
   }).isRequired,
-  timeOut: PropTypes.bool.isRequired,
+  timeOut: PropTypes.shape({
+    disabled: PropTypes.bool,
+  }).isRequired,
 };
 
 const mapStateToProps = (state) => ({

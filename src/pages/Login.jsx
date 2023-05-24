@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { login } from '../Redux/Actions';
+import './Login.css';
 import img from '../trivia.png';
 
 class Login extends React.Component {
@@ -50,32 +51,30 @@ class Login extends React.Component {
       <div className="paginaLogin">
         <img className="logo" src={ img } alt="trivia" />
         <div className="login">
-          <label htmlFor="input-name">
-            Nome:
-            <input
-              id="input-name"
-              name="name"
-              type="text"
-              data-testid="input-player-name"
-              value={ name }
-              onChange={ this.handleChange }
-            />
-          </label>
-          <label htmlFor="input-email">
-            Email:
-            <input
-              id="input-email"
-              name="email"
-              type="email"
-              data-testid="input-gravatar-email"
-              value={ email }
-              onChange={ this.handleChange }
-            />
-          </label>
+          <input
+            id="input-name"
+            className=""
+            name="name"
+            type="text"
+            data-testid="input-player-name"
+            value={ name }
+            onChange={ this.handleChange }
+            placeholder="Name"
+          />
+          <input
+            id="input-email"
+            name="email"
+            type="email"
+            data-testid="input-gravatar-email"
+            value={ email }
+            onChange={ this.handleChange }
+            placeholder="Email"
+          />
           <button
             data-testid="btn-play"
             disabled={ playDisabled }
             onClick={ this.fetchToken }
+            className={ playDisabled ? 'grey' : 'white' }
           >
             Play
           </button>
