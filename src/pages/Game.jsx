@@ -111,6 +111,12 @@ class Game extends React.Component {
   };
 
   nextBtnClick = () => {
+    const { qIndex } = this.state;
+    const { history } = this.props;
+    const maxIndex = 4;
+    if (qIndex === maxIndex) {
+      history.push('/feedback');
+    }
     this.startCounter();
     this.setState((prevState) => ({
       ativar: !prevState.ativar,
