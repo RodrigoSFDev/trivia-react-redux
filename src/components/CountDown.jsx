@@ -6,14 +6,14 @@ import { timeOut } from '../Redux/Actions';
 class Countdown extends React.Component {
   state = { timeLeft: 30 };
 
-  // componentDidMount() {
-  //   const oneSecond = 1000;
-  //   this.countdown = setInterval(() => {
-  //     this.setState((prevState) => ({
-  //       timeLeft: prevState.timeLeft - 1,
-  //     }));
-  //   }, oneSecond);
-  // }
+  componentDidMount() {
+    const oneSecond = 1000;
+    this.countdown = setInterval(() => {
+      this.setState((prevState) => ({
+        timeLeft: prevState.timeLeft - 1,
+      }));
+    }, oneSecond);
+  }
 
   componentDidUpdate() {
     const { timeLeft } = this.state;
