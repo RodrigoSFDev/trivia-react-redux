@@ -5,8 +5,3 @@ export const login = (payload) => ({
   type: PLAYER_LOGIN,
   payload,
 });
-
-export const timeOut = (payload) => ({
-  type: TIME_OUT,
-  payload,
-});
