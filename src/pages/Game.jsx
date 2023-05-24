@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Header from '../components/Header';
-import Countdown from '../components/CountDown';
+import { timeOut } from '../Redux/Actions';
 import './Game.css';
 
 class Game extends React.Component {
@@ -11,12 +11,21 @@ class Game extends React.Component {
     qIndex: 0,
     answers: '',
     ativar: false,
-    // timeLeft: 30,
+    timeLeft: 30,
+
   };
 
   async componentDidMount() {
     const token = localStorage.getItem('token');
     const { qIndex } = this.state;
+
+    const oneSecond = 1000;
+    this.countdown = setInterval(() => {
+      this.setState((prevState) => ({
+        timeLeft: prevState.timeLeft - 1,
+      }));
+    }, oneSecond);
+
     try {
       const response = await fetch(`https://opentdb.com/api.php?amount=5&token=${token}`);
       const data = await response.json();
@@ -53,12 +62,20 @@ class Game extends React.Component {
     }
   }
 
-  // componentDidUpdate(prevState) {
-  //   const { timeOut: { disabled } } = this.props;
-  //   if (disabled && !prevState.disabled) {
-  //     this.clickOn();
-  //   }
-  // }
+  componentDidUpdate() {
+    const { timeLeft } = this.state;
+    const { dispatch } = this.props;
+
+    if (timeLeft === 0) {
+      clearInterval(this.countdown);
+      console.log('parou');
+      dispatch(timeOut(true));
+    }
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.countdown);
+  }
 
   clickOn = () => {
     this.setState({
@@ -96,12 +113,12 @@ class Game extends React.Component {
   };
 
   render() {
-    const { results, qIndex, answers, ativar } = this.state;
+    const { results, qIndex, answers, ativar, timeLeft } = this.state;
     const { timeOut: { disabled } } = this.props;
     return (
       <div className="game-container">
         <Header />
-        { results.length ? <Countdown /> : <h3>Loading...</h3> }
+        { results.length ? <h1>{ timeLeft }</h1> : <h3>Loading...</h3> }
         { results.length ? (
           <div>
             <h2
@@ -161,7 +178,7 @@ class Game extends React.Component {
 }
 
 Game.propTypes = {
-  // dispatch: PropTypes.func.isRequired,
+  dispatch: PropTypes.func.isRequired,
   history: PropTypes.shape({
     push: PropTypes.func,
   }).isRequired,
