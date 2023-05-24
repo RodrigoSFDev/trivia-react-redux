@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Header from '../components/Header';
-import { getScore } from '../Redux/Actions';
+import { getScore, saveAssertions } from '../Redux/Actions';
 import './Game.css';
 
 class Game extends React.Component {
@@ -13,6 +13,7 @@ class Game extends React.Component {
     ativar: false,
     timeLeft: 30,
     disabled: false,
+    assertions: 0,
   };
 
   async componentDidMount() {
@@ -50,7 +51,6 @@ class Game extends React.Component {
         results: replaced,
         answers: randomizedAnswers,
       });
-      console.log(data.results);
     } catch (err) {
       console.log('Um erro foi capturado.', err);
     }
@@ -64,6 +64,7 @@ class Game extends React.Component {
       console.log('parou');
       this.setState({
         disabled: true,
+        ativar: true,
       });
     }
   }
@@ -85,7 +86,7 @@ class Game extends React.Component {
     clearInterval(this.countdown);
     this.setState({
       ativar: true,
-      disabled: false,
+      disabled: true,
     });
   };
 
@@ -112,10 +113,11 @@ class Game extends React.Component {
   };
 
   nextBtnClick = () => {
-    const { qIndex } = this.state;
-    const { history } = this.props;
+    const { qIndex, assertions } = this.state;
+    const { history, dispatch } = this.props;
     const maxIndex = 4;
     if (qIndex === maxIndex) {
+      dispatch(saveAssertions(assertions));
       history.push('/feedback');
     }
     this.startCounter();
@@ -123,7 +125,14 @@ class Game extends React.Component {
       ativar: !prevState.ativar,
       qIndex: prevState.qIndex + 1,
       timeLeft: 30,
+      disabled: false,
     }), this.updateAnswers);
+  };
+
+  correctAnswers = () => {
+    this.setState((prevState) => ({
+      assertions: prevState.assertions + 1,
+    }));
   };
 
   getPoints = () => {
@@ -147,6 +156,7 @@ class Game extends React.Component {
       return true;
     }
     this.clickOn();
+    this.correctAnswers();
   };
 
   render() {
@@ -217,9 +227,6 @@ Game.propTypes = {
   dispatch: PropTypes.func.isRequired,
   history: PropTypes.shape({
     push: PropTypes.func,
-  }).isRequired,
-  timeOut: PropTypes.shape({
-    disabled: PropTypes.bool,
   }).isRequired,
 };
 
