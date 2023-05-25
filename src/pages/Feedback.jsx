@@ -5,6 +5,12 @@ import Header from '../components/Header';
 import './Feedback.css';
 
 class Feedback extends Component {
+  reset = () => {
+    const { history, dispatch } = this.props;
+    history.push('/ranking');
+    dispatch(getScore(0));
+  };
+
   render() {
     const { history, assertions, score } = this.props;
     const minimumScore = 3;
@@ -18,7 +24,7 @@ class Feedback extends Component {
         <button
           type="button"
           data-testid="btn-play-again"
-          onClick={ () => history.push('/') }
+          onClick={ this.reset }
         >
           Play again
         </button>
@@ -37,6 +43,7 @@ class Feedback extends Component {
 Feedback.propTypes = {
   assertions: PropTypes.number.isRequired,
   score: PropTypes.number.isRequired,
+  dispatch: PropTypes.func.isRequired,
   history: PropTypes.shape({
     push: PropTypes.func,
   }).isRequired,
